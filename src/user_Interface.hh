@@ -20,8 +20,41 @@
 
 #include <iostream>
 #include <conio.h>
+#include <windows.h>
 
-void main_menu(){
+struct csize{
+    int col;
+    int rows;
+};
+
+csize getConsoleSize(){
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    int columns, rows;
+
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+
+    return {columns, rows};
+}
+
+void gotoxy(SHORT x, SHORT y)
+{
+    COORD c = { x, y };  
+    SetConsoleCursorPosition(  GetStdHandle(STD_OUTPUT_HANDLE) , c);
+}
+
+void slowprint(std::string text){
+    for(int i=0; i<text.length(); i++){
+        std::cout << text[i];
+        Sleep(35);
+        fflush(stdout);
+    }
+}
+
+void login_screen(){
+    gotoxy(2, 2);
+    
 }
 
 #endif
