@@ -107,7 +107,9 @@ struct Room {
     std::string room_type;
     std::string bed_type;
     uint32_t price_per_night;
+    uint32_t max_occupants;
     bool smoking;
+    bool occupied;
 };
 
 class GuestInterface{

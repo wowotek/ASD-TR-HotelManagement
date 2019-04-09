@@ -108,8 +108,8 @@ int main_menu(credentials user){
             std::cout << "--- Admin Main Menu ---" << std::endl;
             std::cout << "1. Reservation" << std::endl;
             std::cout << "2. Check-Out" << std::endl;
-            std::cout << "3. Update Guest Data" << std::endl;
-            std::cout << "4. Update Room Data" << std::endl;
+            std::cout << "3. Change Guest Data" << std::endl;
+            std::cout << "4. Change Room Data" << std::endl;
             std::cout << "9. Exit" << std::endl;
             std::cin >> input;
             
@@ -131,6 +131,34 @@ int main_menu(credentials user){
     }
 }
 
+void checkout_menu(RoomInterface RI){
+    Room r;
+    bool loop = true;
+    while(loop){
+        LinkedList<Room> roomData = RI.getAllRoom();
+        uint32_t room_number;
+        slowprint("What room you are currently in ?\m[:> ");
+        std::cin >> room_number;
+        for(int i=0; i<roomData.getSize(); i++){
+            if(roomData[i].room_number == room_number){
+                r = roomData[i];
+                loop = false;
+                break;
+            }
+        }
+        slowprint("Your Room is not found ! try again !");
+        Sleep(1500);
+    }
+
+    std::string input;
+    slowprint("Are You Sure you are going to Checkout Now ?\n Y for yes, N for no : ");
+    std::cin >> input;
+    if(input == "Y" || input == "y"){
+        r.occupied = false;
+        RI.updateRoom(r.room_number, r);
+    }
+}
+
 int reservation_menu(){
     int input;
     int x[4] = {1, 2, 9, NULL};
@@ -149,35 +177,51 @@ int reservation_menu(){
 
 void room_list(LinkedList<Room> dbRoom){
     system("cls");
-    slowprint("---- Room List ----");
+    slowprint("---- Available Room List ----");
     for(int i=0; i<dbRoom.getSize(); i++){
         Room d = dbRoom[i];
+        if(d.occupied) continue;
         slowprint("Price Per Night : Rp "); std::cout << d.price_per_night << ",-" << std::endl;
         slowprint("    Room Number : "); std::cout << d.room_number << std::endl;
         slowprint("      Room Type : "); std::cout << d.room_type << std::endl;
         slowprint("       Bed Type : "); std::cout << d.bed_type << std::endl;
+        slowprint("  Max Occupants : "); std::cout << d.max_occupants << std::endl;
         slowprint("   Smoking Room : "); std::cout << (d.smoking == true ? "yes" : "no") << std::endl;
     }
     slowprint("\n\n Press Anything to Continue ...");
     getch();
 }
 
-void reserve_room_menu(){
-    Guest g;
-    while(true){
+void reserve_room_menu(RoomInterface RI, GuestInterface GI){
+    LinkedList<Room> roomData = RI.getAllRoom();
+    Room r;
+    uint32_t night;
+    bool loop = true;
+    while(loop == true){
         uint32_t room_number;
-        slowprint("Enter A Room Number You want To reserve\n[:>");
+        slowprint("Enter A Room Number You want To reserve\n[:> ");
         std::cin >> room_number;
+        for(int i=0; i<roomData.getSize(); i++){
+            if(roomData[i].room_number == room_number){
+                r = roomData[i];
+                loop = false;
+                break;
+            }
+        }
     }
 
+    slowprint("How Many Night You Need to Stay ? ");
+    std::cin >> night;
+
+    Guest g;
     while(true){
         std::string name, id;
         slowprint("---- Room Reservation ----\n");
         slowprint("Please proceed to provide your identification details\n\n");
-        slowprint("Your Name : "); std::getline(std::cin, name);
-        slowprint("Your Identification Number : "); std::getline(std::cin, id);
+        slowprint("Identification Number : "); std::getline(std::cin, id);
+        slowprint("            Full Name : "); std::getline(std::cin, name);
         std::string input;
-        slowprint("Is Above details are correct ?\n Y for yes, N for no");
+        slowprint("Is Above details are correct ?\n Y for yes, N for no : ");
         std::cin >> input;
         if(input == "Y" || input == "y"){
             g.name = name;
@@ -186,7 +230,24 @@ void reserve_room_menu(){
         }
     }
 
-    slowprint("");
+    slowprint("Your Room Reservation is Identified By :\n    "); std::cout << g.name << std::endl;
+    slowprint("Your Are Reserving\n    "); std::cout << r.room_type << std::endl;
+    slowprint("A Price You Need To Pay is :");
+    slowprint("    Rp "); std::cout << r.price_per_night << ",- x " << night << " = Rp ";
+    std::cout << r.price_per_night * night << ",-" << std::endl;
+    slowprint("Is this looks ok ?\n Y for yes, N for no");
+    std::string input; std::cin >> input;
+    if(input == "Y" || input == "y"){
+        r.occupied = true;
+        if(RI.updateRoom(r.room_number, r)==true){
+            slowprint("Have a Good Night Sleep !");
+        } else {
+            slowprint("Sorry there is an error Occured");
+        }
+        return;
+    } else {
+        return reserve_room_menu(RI, GI);
+    }
 }
 
 #endif

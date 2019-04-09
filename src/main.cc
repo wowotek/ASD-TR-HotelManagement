@@ -19,9 +19,40 @@
 #include <iostream>
 #include "user_Interface.hh"
 
-int * test(void);
-
 int main(){
-    std::cout << main_menu(login_screen()) << std::endl;
-    return 0;
+    while(true){
+        RoomInterface RI;
+        GuestInterface GI;
+        credentials loginCredential = login_screen();
+        if(loginCredential.admin == true){
+            switch(main_menu(loginCredential)){
+                default: break;
+                case 9: return 0;
+                case 1:
+                    reservation_menu();
+                    break;
+                case 2:
+                    checkout_menu(RI);
+                    break;
+                case 3:
+                    std::cout << "Not Implemented Yet !" << std::endl; Sleep(1500);
+                    break;
+                case 4:
+                    std::cout << "Not Implemented Yet !" << std::endl; Sleep(1500);
+                    break;
+            }
+        } else {
+            switch(main_menu(loginCredential)){
+                default: break;
+                case 9: return 0;
+                case 1:
+                    reservation_menu();
+                    break;
+                case 2:
+                    checkout_menu(RI);
+                    break;
+            }
+        }
+    }
+    return 1;
 }
