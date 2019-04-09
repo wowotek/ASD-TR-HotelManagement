@@ -23,7 +23,10 @@
 #include <windows.h>
 #include <string>
 #include "database.hh"
+
 #define len(x) (sizeof((x))/sizeof((x)[0]))
+#define or ||
+#define and &&
 
 struct csize{
     int col;
@@ -144,8 +147,46 @@ int reservation_menu(){
     }
 }
 
-void room_list(){
-    
+void room_list(LinkedList<Room> dbRoom){
+    system("cls");
+    slowprint("---- Room List ----");
+    for(int i=0; i<dbRoom.getSize(); i++){
+        Room d = dbRoom[i];
+        slowprint("Price Per Night : Rp "); std::cout << d.price_per_night << ",-" << std::endl;
+        slowprint("    Room Number : "); std::cout << d.room_number << std::endl;
+        slowprint("      Room Type : "); std::cout << d.room_type << std::endl;
+        slowprint("       Bed Type : "); std::cout << d.bed_type << std::endl;
+        slowprint("   Smoking Room : "); std::cout << (d.smoking == true ? "yes" : "no") << std::endl;
+    }
+    slowprint("\n\n Press Anything to Continue ...");
+    getch();
+}
+
+void reserve_room_menu(){
+    Guest g;
+    while(true){
+        uint32_t room_number;
+        slowprint("Enter A Room Number You want To reserve\n[:>");
+        std::cin >> room_number;
+    }
+
+    while(true){
+        std::string name, id;
+        slowprint("---- Room Reservation ----\n");
+        slowprint("Please proceed to provide your identification details\n\n");
+        slowprint("Your Name : "); std::getline(std::cin, name);
+        slowprint("Your Identification Number : "); std::getline(std::cin, id);
+        std::string input;
+        slowprint("Is Above details are correct ?\n Y for yes, N for no");
+        std::cin >> input;
+        if(input == "Y" || input == "y"){
+            g.name = name;
+            g.id = id;
+            break;
+        }
+    }
+
+    slowprint("");
 }
 
 #endif
