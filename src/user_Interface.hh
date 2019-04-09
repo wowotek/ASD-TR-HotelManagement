@@ -21,7 +21,8 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
-
+#include <string>
+#include "database.hh"
 #define len(x) (sizeof((x))/sizeof((x)[0]))
 
 struct csize{
@@ -115,7 +116,7 @@ int main_menu(credentials user){
         int input;
         int x[4] = {1, 2, 9, NULL};
         do {
-            std::cout << "Welcome " << user.username  << std::endl << std::endl;
+            std::cout << "Welcome " << (std::string)user.username  << std::endl << std::endl;
             slowprint("--- Front-Desk Main Menu ---");
             std::cout << "1. Reservation" << std::endl;
             std::cout << "2. Check-Out" << std::endl;

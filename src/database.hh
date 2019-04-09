@@ -114,16 +114,101 @@ class GuestInterface{
     private:
         LinkedList<Guest> dbGuest;
     public:
-        void add_guest(Guest newGuestData){
+        void addGuest(Guest newGuestData){
             dbGuest.push(newGuestData);
         }
+
         LinkedList<Guest> getAllGuestData(){
             return dbGuest;
         }
 
-        
-        bool update_guest(std::string guestId, Guest updated_data){
+        Guest getGuest(std::string);
+        bool updateGuest(std::string, Guest);
+        bool deleteGuest(std::string);
+};
 
+Guest GuestInterface::getGuest(std::string guestId){
+    for(int i=0; i<dbGuest.getSize(); i++){
+        if(dbGuest[i].id == guestId){
+            return dbGuest[i];
         }
+    } 
+    std::cout << "Guest Not Found !" << std::endl;
+    return;
 }
+bool GuestInterface::updateGuest(std::string guestId, Guest updated_data){
+    for(int i=0; i<dbGuest.getSize(); i++){
+        if(dbGuest[i].id == guestId){
+            dbGuest[i].name = updated_data.name;
+            dbGuest[i].id = updated_data.id;
+            return true;
+        }
+    } 
+    return false;
+}
+bool GuestInterface::deleteGuest(std::string guestId){
+    LinkedList<Guest> newDb;
+    for(int i=0; i<dbGuest.getSize(); i++){
+        if(dbGuest[i].id == guestId){
+            continue;
+        }
+        Guest x;
+        x.name = dbGuest[i].name;
+        x.id = dbGuest[i].id;
+        newDb.push(x);
+    }
+    dbGuest = newDb;
+    return true;
+}
+
+class RoomInterface{
+    private:
+        LinkedList<Room> dbRoom;
+    public:
+        void addRoom(Room room){
+            dbRoom.push(room);
+        }
+        LinkedList<Room> getAllRoom(){
+            return dbRoom;
+        }
+        Room getRoom(uint32_t);
+        bool updateRoom(uint32_t, Room);
+        bool deleteRoom(uint32_t);
+};
+
+Room RoomInterface::getRoom(uint32_t roomNumber){
+    for(int i=0; i<dbRoom.getSize(); i++){
+        if(dbRoom[i].room_number == roomNumber){
+            return dbRoom[i];
+        }
+    }
+    return;
+}
+
+bool RoomInterface::updateRoom(uint32_t roomNumber, Room newRoom){
+    for(int i=0; i<dbRoom.getSize(); i++){
+        if(dbRoom[i].room_number == roomNumber){
+            dbRoom[i].room_number = newRoom.room_number;
+            dbRoom[i].room_type = newRoom.room_type;
+            dbRoom[i].bed_type = newRoom.bed_type;
+            dbRoom[i].smoking = newRoom.smoking;
+
+            return true;
+        }
+    }
+    return false;
+}
+
+bool RoomInterface::deleteRoom(uint32_t roomNumber){
+    LinkedList<Room> newDb;
+    for(int i=0; i<dbRoom.getSize(); i++){
+        if(dbRoom[i].room_number == roomNumber){
+            continue;
+        }
+        newDb.push(dbRoom[i]);
+    }
+    dbRoom = newDb;
+    return true;
+}
+
 #endif
