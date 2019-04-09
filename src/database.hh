@@ -18,16 +18,15 @@
 #ifndef INCLUDE_DATABASE_HH
 #define INCLUDE_DATABASE_HH
 
-#include <string>
 #include <iostream>
+#include <string>
 
 template<typename T> struct Node {
     Node<T> *next;
     T head;
     public:
-
-    Node<T>(void);
-    Node<T>(const T&);
+        Node<T>(void);
+        Node<T>(const T&);
 
     template<typename> friend struct LinkedList;
 };
@@ -111,4 +110,20 @@ struct Room {
     bool smoking;
 };
 
+class GuestInterface{
+    private:
+        LinkedList<Guest> dbGuest;
+    public:
+        void add_guest(Guest newGuestData){
+            dbGuest.push(newGuestData);
+        }
+        LinkedList<Guest> getAllGuestData(){
+            return dbGuest;
+        }
+
+        
+        bool update_guest(std::string guestId, Guest updated_data){
+
+        }
+}
 #endif

@@ -17,11 +17,11 @@
  */
 
 #include <iostream>
-#include <cstring>
+#include "user_Interface.hh"
+
+int * test(void);
 
 int main(){
-    std::string x;
-    getline(std::cin, x);
-    std::cout << x << std::endl;
+    std::cout << main_menu(login_screen()) << std::endl;
     return 0;
 }

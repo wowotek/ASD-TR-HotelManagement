@@ -22,9 +22,18 @@
 #include <conio.h>
 #include <windows.h>
 
+#define len(x) (sizeof((x))/sizeof((x)[0]))
+
 struct csize{
     int col;
     int rows;
+};
+
+struct credentials {
+    std::string username;
+    std::string password;
+    std::string NamaLengkap;
+    bool        admin;
 };
 
 csize getConsoleSize(){
@@ -41,19 +50,100 @@ csize getConsoleSize(){
 void gotoxy(SHORT x, SHORT y)
 {
     COORD c = { x, y };  
-    SetConsoleCursorPosition(  GetStdHandle(STD_OUTPUT_HANDLE) , c);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
+}
+
+bool check_slice(int input, int * array){
+    while(*array != NULL){
+        if(input == *array) return true;
+        array++;
+    }
+    return false;
 }
 
 void slowprint(std::string text){
+    fflush(stdout);
     for(int i=0; i<text.length(); i++){
         std::cout << text[i];
         Sleep(35);
         fflush(stdout);
     }
+    fflush(stdout);
 }
 
-void login_screen(){
-    gotoxy(2, 2);
+credentials login_screen(){
+    static credentials userData[] = {
+        {"wowotek", "kantongajaib", "Erlangga Ibrahim", true},
+        {"aureliagbrl", "gabycantik", "Aurelia Gabriele", false},
+        {"sambram", "samuelaja11", "Samuel Dwi Bramantya", false},
+        {"freshman", "bimbag", "Bimo Bagus", false},
+    };
+    std::string username, password;
+
+    slowprint("----- Login Screen -----\n");
+    slowprint("Username : "); std::getline(std::cin, username);
+    slowprint("Password : "); std::getline(std::cin, password);
+    for(int i=0; i<len(userData); i++){
+        if(username == userData[i].username && password == userData[i].password){
+            return userData[i];
+        }
+    }
+
+    slowprint("Wrong Credentials !\n"); fflush(stdout);
+    Sleep(2500);
+    return login_screen();
+}
+
+int main_menu(credentials user){
+    if(user.admin == true){
+        int input;
+        int x[6] = {1, 2, 3, 4, 9, NULL};
+        do {
+            system("cls");
+            std::cout << "Welcome " << user.username << " Super User" << std::endl << std::endl;
+            std::cout << "--- Admin Main Menu ---" << std::endl;
+            std::cout << "1. Reservation" << std::endl;
+            std::cout << "2. Check-Out" << std::endl;
+            std::cout << "3. Update Guest Data" << std::endl;
+            std::cout << "4. Update Room Data" << std::endl;
+            std::cout << "9. Exit" << std::endl;
+            std::cin >> input;
+            
+        } while (check_slice(input, x) !=true);
+        return input;
+    } else {
+        int input;
+        int x[4] = {1, 2, 9, NULL};
+        do {
+            std::cout << "Welcome " << user.username  << std::endl << std::endl;
+            slowprint("--- Front-Desk Main Menu ---");
+            std::cout << "1. Reservation" << std::endl;
+            std::cout << "2. Check-Out" << std::endl;
+            std::cout << "9. Exit" << std::endl;
+            std::cin >> input;
+
+        } while (check_slice(input, x)!=true);
+        return input;
+    }
+}
+
+int reservation_menu(){
+    int input;
+    int x[4] = {1, 2, 9, NULL};
+    slowprint("---- Reservation Menu ----");
+    std::cout << "1. Room List" << std::endl;
+    std::cout << "2. Reserve Room" << std::endl;
+    std::cout << "9. Exit" << std::endl;
+    std::cin >> input;
+
+    if(check_slice(input, x)!=true){
+        return reservation_menu();
+    } else {
+        return input;
+    }
+}
+
+void room_list(){
     
 }
 
