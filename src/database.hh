@@ -25,8 +25,9 @@ template<typename T> struct Node {
     Node<T> *next;
     T head;
     public:
-        Node<T>(void);
-        Node<T>(const T&);
+
+    Node<T>(void);
+    Node<T>(const T&);
 
     template<typename> friend struct LinkedList;
 };
@@ -41,7 +42,7 @@ template<typename T> struct LinkedList {
     public:
 
     LinkedList(void);
-    ~LinkedList(void);
+    //~LinkedList(void);
 
     void push(const T&);
     void pop(void);
@@ -62,8 +63,7 @@ void LinkedList<T>::push(const T& _) {
     else
     {
         Node<T>* node = this->root;
-        while ((node = node->next) != nullptr);
-        node = new Node<T>(_);
+        while ((node = node->next) != nullptr) node = new Node<T>(_);
     }
 
     ++this->size;
@@ -86,12 +86,12 @@ template<typename T> size_t LinkedList<T>::getSize(void) const { return this->si
 
 template<typename T>
 T& LinkedList<T>::operator[] (int index) {
-    if(index < this->size - 1 && index >= 0) {
-        Node<T> *node = this->root;
+    Node<T> *node = this->root;
 
-        for(size_t i = 0; i < index && node != nullptr; ++i) node = node->next;
+    for(size_t i = 0; i < index && node != nullptr; ++i) node = node->next;
 
-        return node->head;    
+    if (node != nullptr) {
+        return node->head;
     } else {
         throw std::runtime_error("node is nullptr!");
     }
@@ -102,6 +102,13 @@ struct Guest {
     std::string name;
 };
 
+Guest guestNullValue() {
+    Guest g;
+    g.id = "";
+    g.name = "";
+    return g;
+}
+
 struct Room {
     uint32_t room_number;           // Unique ID
     std::string room_type;
@@ -111,6 +118,18 @@ struct Room {
     bool smoking;
     bool occupied;
 };
+
+Room roomNullValue(){
+    Room r;
+    r.room_number = NULL;
+    r.room_type = "";
+    r.bed_type = "";
+    r.price_per_night = 0;
+    r.max_occupants = 0;
+    r.smoking = false;
+    r.occupied = false;
+    return r;
+}
 
 class GuestInterface{
     private:
@@ -136,7 +155,7 @@ Guest GuestInterface::getGuest(std::string guestId){
         }
     } 
     std::cout << "Guest Not Found !" << std::endl;
-    return;
+    return guestNullValue();
 }
 bool GuestInterface::updateGuest(std::string guestId, Guest updated_data){
     for(int i=0; i<dbGuest.getSize(); i++){
@@ -184,7 +203,7 @@ Room RoomInterface::getRoom(uint32_t roomNumber){
             return dbRoom[i];
         }
     }
-    return;
+    return roomNullValue();
 }
 
 bool RoomInterface::updateRoom(uint32_t roomNumber, Room newRoom){

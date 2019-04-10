@@ -1,4 +1,3 @@
-#include <string>
 #include <iostream>
 
 template<typename T> struct Node {
@@ -22,7 +21,7 @@ template<typename T> struct LinkedList {
     public:
 
     LinkedList(void);
-    ~LinkedList(void);
+    //~LinkedList(void);
 
     void push(const T&);
     void pop(void);
@@ -79,19 +78,17 @@ T& LinkedList<T>::operator[] (int index) {
 }
 
 struct Guest {
-    std::string name;
     uint32_t id;
 };
 
 int main() {
     Guest guest1;
-    guest1.name = "Saidwho12";
     guest1.id = 2256;
 
     LinkedList<Guest> guestList;
     guestList.push(guest1);
 
-    std::cout << guestList[0].name << std::endl;
+    std::cout << guestList[0].id << std::endl;
 
     return 0;
 }

@@ -25,8 +25,6 @@
 #include "database.hh"
 
 #define len(x) (sizeof((x))/sizeof((x)[0]))
-#define or ||
-#define and &&
 
 struct csize{
     int col;
@@ -101,7 +99,7 @@ credentials login_screen(){
 int main_menu(credentials user){
     if(user.admin == true){
         int input;
-        int x[6] = {1, 2, 3, 4, 9, NULL};
+        int x[7] = {1, 2, 3, 4, 5, 9, NULL};
         do {
             system("cls");
             std::cout << "Welcome " << user.username << " Super User" << std::endl << std::endl;
@@ -110,6 +108,7 @@ int main_menu(credentials user){
             std::cout << "2. Check-Out" << std::endl;
             std::cout << "3. Change Guest Data" << std::endl;
             std::cout << "4. Change Room Data" << std::endl;
+            std::cout << "8. Logout" << std::endl;
             std::cout << "9. Exit" << std::endl;
             std::cin >> input;
             
@@ -117,12 +116,13 @@ int main_menu(credentials user){
         return input;
     } else {
         int input;
-        int x[4] = {1, 2, 9, NULL};
+        int x[5] = {1, 2, 8, 9, NULL};
         do {
             std::cout << "Welcome " << (std::string)user.username  << std::endl << std::endl;
-            slowprint("--- Front-Desk Main Menu ---");
+            slowprint("--- Front-Desk Main Menu ---\n");
             std::cout << "1. Reservation" << std::endl;
             std::cout << "2. Check-Out" << std::endl;
+            std::cout << "8. Logout" << std::endl;
             std::cout << "9. Exit" << std::endl;
             std::cin >> input;
 
@@ -137,7 +137,7 @@ void checkout_menu(RoomInterface RI){
     while(loop){
         LinkedList<Room> roomData = RI.getAllRoom();
         uint32_t room_number;
-        slowprint("What room you are currently in ?\m[:> ");
+        slowprint("What room you are currently in ?\n[:> ");
         std::cin >> room_number;
         for(int i=0; i<roomData.getSize(); i++){
             if(roomData[i].room_number == room_number){
@@ -146,7 +146,7 @@ void checkout_menu(RoomInterface RI){
                 break;
             }
         }
-        slowprint("Your Room is not found ! try again !");
+        slowprint("Your Room is not found ! try again !\n");
         Sleep(1500);
     }
 
@@ -162,7 +162,7 @@ void checkout_menu(RoomInterface RI){
 int reservation_menu(){
     int input;
     int x[4] = {1, 2, 9, NULL};
-    slowprint("---- Reservation Menu ----");
+    slowprint("---- Reservation Menu ----\n");
     std::cout << "1. Room List" << std::endl;
     std::cout << "2. Reserve Room" << std::endl;
     std::cout << "9. Exit" << std::endl;
@@ -177,7 +177,7 @@ int reservation_menu(){
 
 void room_list(LinkedList<Room> dbRoom){
     system("cls");
-    slowprint("---- Available Room List ----");
+    slowprint("---- Available Room List ----\n");
     for(int i=0; i<dbRoom.getSize(); i++){
         Room d = dbRoom[i];
         if(d.occupied) continue;
@@ -187,9 +187,11 @@ void room_list(LinkedList<Room> dbRoom){
         slowprint("       Bed Type : "); std::cout << d.bed_type << std::endl;
         slowprint("  Max Occupants : "); std::cout << d.max_occupants << std::endl;
         slowprint("   Smoking Room : "); std::cout << (d.smoking == true ? "yes" : "no") << std::endl;
+        std::cout << std::endl;
     }
+    std::string x;
     slowprint("\n\n Press Anything to Continue ...");
-    getch();
+    std::cin >> x;
 }
 
 void reserve_room_menu(RoomInterface RI, GuestInterface GI){
@@ -208,6 +210,7 @@ void reserve_room_menu(RoomInterface RI, GuestInterface GI){
                 break;
             }
         }
+        slowprint("There is no such Room, Try Again !\n");
     }
 
     slowprint("How Many Night You Need to Stay ? ");

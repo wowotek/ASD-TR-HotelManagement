@@ -20,16 +20,54 @@
 #include "user_Interface.hh"
 
 int main(){
+    RoomInterface RI;
+    GuestInterface GI;
+    Room rx1, rx2, rx3;
+    rx1.room_number = 101;
+    rx1.room_type = "Superior";
+    rx1.bed_type = "Twin Bed";
+    rx1.price_per_night = 125000;
+    rx1.max_occupants = 2;
+    rx1.smoking = false;
+    rx1.occupied = false;
+
+    RI.addRoom(rx1);
+
+    rx2.room_number = 202;
+    rx2.room_type = "Deluxe";
+    rx2.bed_type = "King Size";
+    rx2.price_per_night = 345000;
+    rx2.max_occupants = 3;
+    rx2.smoking = false;
+    rx2.occupied = false;
+    
+    RI.addRoom(rx2);
+
+    rx3.room_number = 303;
+    rx3.room_type = "Suite";
+    rx3.bed_type = "King Size";
+    rx3.price_per_night = 780000;
+    rx3.max_occupants = 3;
+    rx3.smoking = true;
+    rx3.occupied = false;
+    
+    RI.addRoom(rx3);
+
+    credentials loginCredential = login_screen();
     while(true){
-        RoomInterface RI;
-        GuestInterface GI;
-        credentials loginCredential = login_screen();
         if(loginCredential.admin == true){
             switch(main_menu(loginCredential)){
                 default: break;
+                case 8: return main();
                 case 9: return 0;
                 case 1:
-                    reservation_menu();
+                    switch(reservation_menu()){
+                        case 1:
+                            room_list(RI.getAllRoom());
+                            break;
+                        case 2:
+                            reserve_room_menu(RI, GI);
+                    }
                     break;
                 case 2:
                     checkout_menu(RI);
@@ -41,18 +79,6 @@ int main(){
                     std::cout << "Not Implemented Yet !" << std::endl; Sleep(1500);
                     break;
             }
-        } else {
-            switch(main_menu(loginCredential)){
-                default: break;
-                case 9: return 0;
-                case 1:
-                    reservation_menu();
-                    break;
-                case 2:
-                    checkout_menu(RI);
-                    break;
-            }
         }
     }
-    return 1;
 }
